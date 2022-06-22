@@ -1,4 +1,14 @@
+using DataProvider.WebAPI.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", false, true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
+    .AddEnvironmentVariables();
+
+builder.Services.AddCustomHealthChecks(builder.Configuration);
 
 // Add services to the container.
 
@@ -19,6 +29,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCustomtHealthChecks();
 
 app.MapControllers();
 
