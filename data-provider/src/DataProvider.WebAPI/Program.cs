@@ -1,4 +1,6 @@
+using DataProvider.Persistence.SQL.Context;
 using DataProvider.WebAPI.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,16 +12,17 @@ builder.Configuration
 
 builder.Services.AddCustomHealthChecks(builder.Configuration);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var sqlConnectionString = builder.Configuration.GetConnectionString("SqlDatabase");
+var serverVersion = ServerVersion.AutoDetect(sqlConnectionString);
+
+builder.Services.AddDbContext<SqlContext>(options => options.UseMySql(sqlConnectionString, serverVersion));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
