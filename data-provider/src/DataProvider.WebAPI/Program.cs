@@ -1,6 +1,8 @@
 using DataProvider.Persistence.SQL.Context;
 using DataProvider.WebAPI.Extensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +12,16 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
 
+builder.Services.ConfigureDependencyInjection();
+
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 builder.Services.AddCustomHealthChecks(builder.Configuration);
 
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 var sqlConnectionString = builder.Configuration.GetConnectionString("SqlDatabase");

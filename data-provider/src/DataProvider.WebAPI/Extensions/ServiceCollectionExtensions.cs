@@ -1,4 +1,6 @@
-﻿namespace DataProvider.WebAPI.Extensions
+﻿using DataProvider.CrossCutting;
+
+namespace DataProvider.WebAPI.Extensions
 {
     /// <summary>
     /// Service Collection extensions methods
@@ -13,6 +15,11 @@
         public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHealthChecks();
+        }
+
+        public static void ConfigureDependencyInjection(this IServiceCollection services)
+        {
+            services.AddCrossCuttingServices();
         }
     }
 }
