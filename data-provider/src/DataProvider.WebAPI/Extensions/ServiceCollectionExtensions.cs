@@ -14,7 +14,8 @@ namespace DataProvider.WebAPI.Extensions
         /// <param name="configuration">Configuration</param>
         public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddMySql(configuration["ConnectionStrings:SqlDatabase"]);
         }
 
         public static void ConfigureDependencyInjection(this IServiceCollection services)
